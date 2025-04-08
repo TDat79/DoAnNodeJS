@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Display</title>
+    <style>
+        ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+
+        li {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+
+        .menu-item {
+            cursor: pointer;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .menu-item:hover {
+            text-decoration: underline;
+        }
+
+        .error {
+            color: red;
+            text-align: center;
+        }
+
+        .loading {
+            text-align: center;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>Menu Cấp Bậc</h1>
+    <div id="menuContainer">
+        <div class="loading">Đang tải menu...</div>
+    </div>
+
+    <script>
+        // Fetch dữ liệu từ API
+        async function fetchMenus() {
+            const container = document.getElementById('menuContainer');
+            container.innerHTML = '<div class="loading">Đang tải menu...</div>';
+
+            try {
+                const response = await fetch('http://localhost:3000/menus');
+                if (!response.ok) {
+                    throw new Error('Không thể kết nối đến server');
+                }
+                const menus = await response.json();
+                renderMenu(menus);
+            } catch (error) {
+                container.innerHTML = `<div class="error">Lỗi: ${error.message}</div>`;
+            }
+        }
+
+        // Hàm render menu (chỉ cấp 1 trong <ul>, cấp 2 trong <li>)
+        function renderMenu(menus) {
+            const container = document.getElementById('menuContainer');
+            let html = '<ul>';
+
+            menus.forEach(menu => {
+                // Cấp 1: Mỗi menu không có parent là <li> trong <ul> chính
+                html += `<li>
+                    <strong>${menu.text}</strong> (URL: ${menu.URL})
+                    ${renderChildren(menu.children)}
+                </li>`;
+            });
+
+            html += '</ul>';
+            container.innerHTML = html;
+        }
+
+        // Hàm render các con (children) - cấp 2
+        function renderChildren(children) {
+            if (!children || children.length === 0) return '';
+
+            let html = '<ul>';
+            children.forEach(child => {
+                // Cấp 2: Mỗi con là <li> trong <ul> con
+                html += `<li class="menu-item">
+                    ${child.text} (URL: ${child.URL})
+                </li>`;
+            });
+            html += '</ul>';
+            return html;
+        }
+
+        // Gọi hàm khi trang tải
+        document.addEventListener('DOMContentLoaded', fetchMenus);
+    </script>
+</body>
+</html>
