@@ -6,14 +6,14 @@ let crypto = require('crypto')
 let mailMiddleware = require('../Utils/sendMail')
 const { validators, validator_middleware } = require('../Utils/validator');
 
-router.post('/signup', async function (req, res, next) {
+router.post('/signup',validators, validator_middleware, async function (req, res, next) {
   try {
     let body = req.body;
     let result = await userController.createUser(
       body.username,
       body.password,
       body.email,
-      "user"
+      "admin"
     )
     res.status(200).send({
       success: true,
@@ -65,17 +65,17 @@ router.get('/me', check_authentication, async function (req, res, next) {
   }
 })
 
-router.post('/forgotpasswood', async function (req, res, next) {
+router.post('/forgotpassword', async function (req, res, next) {
   let body = req.body;
   let email = body.email;
   let user = await userController.getUserByEmail(email);
   user.resetPasswordToken = crypto.randomBytes(32).toString('hex');
   user.resetPasswordTokenExp = new Date(Date.now() + 30 * 60 * 1000).getTime();
   await user.save();
-  let url = `http://localhost:3000/auth/changepasswordforgot/${user.resetPasswordToken}`;
+  let url = `http://localhost:3000/api/auth/changepasswordforgot/${user.resetPasswordToken}`;
   let result = await mailMiddleware.sendmail(user.email, "link tim lai mk", url)
   res.send({
-    message: `da gui thanh cong`
+    message: `da gui thanh cong, ${url}`,
   })
 })
 
