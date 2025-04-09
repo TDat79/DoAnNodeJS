@@ -41,7 +41,9 @@ const userSchema = new Schema({
     createdAt: {
         type: Date,
         default: Date.now
-    }
+    },
+    resetPasswordToken:String,
+    resetPasswordTokenExp:Date,
 }, {
     timestamps: true,
     toJSON: { virtuals: true },

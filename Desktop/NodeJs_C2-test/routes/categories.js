@@ -19,7 +19,7 @@ router.get('/', async function(req, res, next) {
 // Lấy danh sách tất cả categories (bao gồm cả đã xóa) - Chỉ admin
 router.get('/all', 
     check_authentication, 
-    check_authorization(['ADMIN']), 
+    check_authorization(['admin']), 
     async function(req, res, next) {
         try {
             const categories = await Category.find().withDeleted();
@@ -35,7 +35,7 @@ router.get('/all',
 // Lấy danh sách categories đã xóa - Chỉ admin
 router.get('/deleted', 
     check_authentication, 
-    check_authorization(['ADMIN']), 
+    check_authorization(['admin']), 
     async function(req, res, next) {
         try {
             const categories = await Category.find().onlyDeleted();
@@ -70,7 +70,7 @@ router.get('/:id', async function(req, res, next) {
 // Tạo category mới
 router.post('/', 
     check_authentication, 
-    check_authorization(['ADMIN']), 
+    check_authorization(['admin']), 
     async function(req, res, next) {
         try {
             const { categoryName, description } = req.body;
@@ -106,7 +106,7 @@ router.post('/',
 // Cập nhật category
 router.put('/:id', 
     check_authentication, 
-    check_authorization(['ADMIN']), 
+    check_authorization(['admin']), 
     async function(req, res, next) {
         try {
             const { categoryName, description } = req.body;
@@ -151,7 +151,7 @@ router.put('/:id',
 // Xóa category (xóa mềm)
 router.delete('/:id', 
     check_authentication, 
-    check_authorization(['ADMIN']), 
+    check_authorization(['admin']), 
     async function(req, res, next) {
         try {
             const category = await Category.findOne({ _id: req.params.id }).notDeleted();
@@ -179,7 +179,7 @@ router.delete('/:id',
 // Khôi phục category đã xóa
 router.post('/:id/restore', 
     check_authentication, 
-    check_authorization(['ADMIN']), 
+    check_authorization(['admin']), 
     async function(req, res, next) {
         try {
             const category = await Category.findOne({ 

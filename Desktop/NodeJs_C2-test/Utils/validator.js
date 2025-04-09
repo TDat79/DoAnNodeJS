@@ -17,7 +17,7 @@ module.exports = {
         body('email').isEmail()
             .withMessage(constants.EMAIL_ERROR),
         body('password').isStrongPassword(config.password_config)
-            .withMessage(util.format(constants.PASSWORD_ERROR,
+            .withMessage('password phải có ít nhất 1 chữ hoa, 1 chữ thường, số và ký tự đặc biệt',util.format(constants.PASSWORD_ERROR,
                 config.password_config.minLength,
                 config.password_config.minSymbols,
                 config.password_config.minUppercase,
@@ -25,9 +25,9 @@ module.exports = {
                 config.password_config.minNumbers,
             )),
         body('username').isAlphanumeric().withMessage('username chi dc chu va so'),
-        body('role').isIn(constants.USER_PERMISSION).withMessage('role khong hop le'),
+        // body('role').isIn(constants.USER_PERMISSION).withMessage('role khong hop le'),
         body('fullname').isAlpha().withMessage('fullname chi duoc chua chu cai'),
-        body('imgURL').isURL().withMessage('imgURL phai la mot URL hop le')
+        // body('imgURL').isURL().withMessage('imgURL phai la mot URL hop le')
     ],
     validator_middleware: function (req, res, next) {
         let errors = validationResult(req);

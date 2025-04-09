@@ -36,33 +36,33 @@ router.get('/:id', productController.getProductById);
 // Routes yêu cầu quyền admin
 router.post('/', 
     check_authentication, 
-    check_authorization(['ADMIN']),
+    check_authorization(['admin']),
     upload.array('images', 5),
     productController.createProduct
 );
 
 router.put('/:id', 
     check_authentication, 
-    check_authorization(['ADMIN']),
+    check_authorization(['admin']),
     upload.array('images', 5),
     productController.updateProduct
 );
 
 router.delete('/:id', 
     check_authentication, 
-    check_authorization(['ADMIN']), 
+    check_authorization(['admin']), 
     productController.deleteProduct
 );
 
 router.post('/:id/restore', 
     check_authentication, 
-    check_authorization(['ADMIN']), 
+    check_authorization(['admin']), 
     productController.restoreProduct
 );
 
 router.get('/admin/deleted', 
     check_authentication, 
-    check_authorization(['ADMIN']), 
+    check_authorization(['admin']), 
     productController.getDeletedProducts
 );
 
